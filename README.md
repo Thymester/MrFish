@@ -9,7 +9,7 @@
       `\\\\´´\¸.·´   \_|  |_/_|    \_|   |_|___/_| |_|
 ```
 
-[![GitHub Stats](https://github-readme-stats.vercel.app/api/pin/?username=1rens1&repo=MrFish)](https://github.com/1rens1/MrFish)
+[![GitHub Stats](https://github-readme-stats.vercel.app/api/pin/?username=1rens1&repo=MrFish)](https://github.com/Thymester/MrFish)
 
 ## About
 

@@ -14,7 +14,7 @@
 ## About
 
 MrFish is a form spammer script created by [Daan Van Essen / Amadeus](https://hrzn.bio/teylver) for phishing links.
-Helped by [Rend](https://github.com/1rens1)!
+Helped by [Rens](https://github.com/1rens1)!
 
 ## Installation
 

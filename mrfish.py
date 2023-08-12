@@ -28,6 +28,15 @@ def generate_random_password():
         return random.choice(dictionary) + random.choice(string.digits)
     else:
         return random.choice(string.digits) + random.choice(dictionary) + random.choice(names)
+    
+def generate_random_credit_card():
+    return ''.join(random.choice(string.digits) for i in range(16))
+
+def generate_random_credit_card_expiration():
+    return ''.join(random.choice(string.digits) for i in range(4))
+
+def generate_random_credit_card_cvv():
+    return ''.join(random.choice(string.digits) for i in range(3))
 
 def run():
     proxy = None
@@ -105,14 +114,49 @@ if __name__ == '__main__':
         use_proxy = input(' Enable Proxy [Y/N]: ')
         if use_proxy.lower() in ('y', 'n'):
             if use_proxy.lower() == 'y':
-                print('Since you are using the proxy setting, you might experience slower performance and less stability, however, we do filter status requests.\n\n')
-                print('A kind note to the proxy setting:\nThis setting might, on some sites, seem to not be working as you have not seen any recent requests.\n\n')
+                print('Since you are using the proxy setting, you might experience slower performance and less stability; however, we do filter status requests.\n\n')
+                print('A kind note to the proxy setting:\nThis setting might--on some sites--seem to not be working as you have not seen any recent requests.\n\n')
                 break
             if use_proxy.lower() == 'n':
                 break
         else:
             print(' That is not a valid option')
             continue
+    while True:
+        credit_card = input(' Generate credit card numbers? [Y/N]: ')
+        if credit_card.lower() in ('y', 'n'):
+            if credit_card.lower() == 'y':
+                print('Generating credit card numbers..')
+                break
+            if credit_card.lower() == 'n':
+                break
+        else:
+            print(' That is not a valid option')
+            continue
+    if credit_card.lower() == 'y':
+        while True:
+            credit_card_expiration = input(' Generate credit card expiration dates? [Y/N]: ')
+            if credit_card_expiration.lower() in ('y', 'n'):
+                if credit_card_expiration.lower() == 'y':
+                    print('Generating credit card expiration dates..')
+                    break
+                if credit_card_expiration.lower() == 'n':
+                    break
+            else:
+                print(' That is not a valid option')
+                continue
+    if credit_card.lower() == 'y':
+        while True:
+            credit_card_cvv = input(' Generate credit card CVV numbers? [Y/N]: ')
+            if credit_card_cvv.lower() in ('y', 'n'):
+                if credit_card_cvv.lower() == 'y':
+                    print('Generating credit card CVV numbers..')
+                    break
+                if credit_card_cvv.lower() == 'n':
+                    break
+            else:
+                print(' That is not a valid option')
+                continue
 
     chars = string.ascii_letters + string.digits
     random.seed = (os.urandom(1024))

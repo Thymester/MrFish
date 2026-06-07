@@ -13,7 +13,7 @@
 
 ## About
 
-MrFish is a form spammer script created by [Daan Van Essen / Amadeus](https://hrzn.bio/teylver) for phishing links.
+MrFish is a form spammer script created by [Tyler The Dev](https://tylerthedev.xyz/) for phishing links.
 Helped by [Rens](https://github.com/1rens1)!
 
 ## Installation

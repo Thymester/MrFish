@@ -38,46 +38,67 @@ def generate_random_credit_card_expiration():
 def generate_random_credit_card_cvv():
     return ''.join(random.choice(string.digits) for i in range(3))
 
-def run():
+def run(url, headers, formDataNameLogin, formDataNamePass, formDataNameLoginName, use_proxy, proxy_list, credit_card, credit_card_expiration, credit_card_cvv):
     proxy = None
     while True:
         if use_proxy == 'y':
             proxy = f'socks5://{random.choice(proxy_list)}'
+            
         if formDataNameLoginName == 'u':
             username = generate_random_name()
-        if formDataNameLoginName == 'e':
-            username = generate_random_name() + '@' + random.choice(emails) + \
-                '.' + random.choice(ext)
+        elif formDataNameLoginName == 'e':
+            username = generate_random_name() + '@' + random.choice(emails) + '.' + random.choice(ext)
+            
         password = generate_random_password()
+        
+        # Initialize the baseline payload
+        payload = {
+            str(formDataNameCookie): str(headers['Cookie']),
+            str(formDataNameContentType): str(headers['Content-Type']),
+            str(formDataNameLogin): username,
+            str(formDataNamePass): password,
+        }
+        
+        # Conditionally append secondary data fields if enabled by the user
+        if credit_card == 'y':
+            payload['card_number'] = generate_random_credit_card()
+            
+            if credit_card_expiration == 'y':
+                payload['card_expiry'] = generate_random_credit_card_expiration()
+                
+            if credit_card_cvv == 'y':
+                payload['card_cvv'] = generate_random_credit_card_cvv()
+
         try:
-            r = requests.post(url, headers=headers, allow_redirects=False, data={
-                str(formDataNameCookie): str(headers['Cookie']),
-                str(formDataNameContentType): str(headers['Content-Type']),
-                str(formDataNameLogin): username,
-                str(formDataNamePass): password,
-            }, proxies=dict(http=proxy, https=proxy))
-            date = datetime.today().strftime('%H:%m:%S')
-            if r.status_code == 403 or r.status_code == 429 or r.status_code == 500 or r.status_code == 502 or r.status_code == 503 or r.status_code == 504:
+            r = requests.post(
+                url, 
+                headers=headers, 
+                allow_redirects=False, 
+                data=payload, 
+                proxies=dict(http=proxy, https=proxy)
+            )
+            
+            date = datetime.today().strftime('%H:%M:%S')
+            if r.status_code in [403, 429, 500, 502, 503, 504]:
                 print(f'[{date}] {r.status_code} {r.reason} {r.url}')
                 proxy = f'socks5://{random.choice(proxy_list)}'
                 if r.status_code == 429:
                     print(f'[{date}] {username}:{password} - {r.status_code}; You are being rate limited!')
                 continue
-            print(
-                f'{date}> [Result: {r.status_code}] - [{formDataNameLogin}: {username}] - [{formDataNamePass}: {password}] [Proxy: {proxy}]')
+                
+            print(f'{date}> [Result: {r.status_code}] - [{formDataNameLogin}: {username}] - [{formDataNamePass}: {password}] [Proxy: {proxy}]')
+            
         except SSLError as e:
             proxy = f'socks5://{random.choice(proxy_list)}'
-            # print('Error: URL can no longer be reached..')
         except Exception as e:
             proxy = f'socks5://{random.choice(proxy_list)}'
             continue
-            # print(f'Error: {e.__class__.__name__}')
 
 mrfish_display = """.
  \033[93m       /`·.¸          \033[0m
- \033[93m      /¸...¸`:·       \033[0m \033[93mMrFish\033[0m - Discord Nitro Phishing Form Spammer w/header support
+ \033[93m      /¸...¸`:·       \033[0m \033[93mMrFish\033[0m - Phishing Form Spammer w/header support
  \033[93m  ¸.·´  ¸   `·.¸.·´)  \033[0m
- \033[93m : © ):´;      ¸  {   \033[0m By Daan Van Essen#1337 / Amadeus
+ \033[93m : © ):´;      ¸  {   \033[0m By Tyler The Dev
  \033[93m  `·.¸ `·  ¸.·´\`·¸)  \033[0m Modified by rens#6161
  \033[93m      `\\\\´´\¸.·´    \033[0m
 ."""
@@ -168,5 +189,19 @@ if __name__ == '__main__':
     proxy_list = json.loads(open('assets/proxies.json').read())
 
 for i in range(threads):
-    t = threading.Thread(target=run)
+    t = threading.Thread(
+        target=run, 
+        args=(
+            url, 
+            headers, 
+            formDataNameLogin, 
+            formDataNamePass, 
+            formDataNameLoginName.lower(), 
+            use_proxy.lower(), 
+            proxy_list, 
+            credit_card.lower(), 
+            credit_card_expiration.lower(), 
+            credit_card_cvv.lower()
+        )
+    )
     t.start()
